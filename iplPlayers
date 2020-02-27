@@ -1,0 +1,33 @@
+pragma solidity ^0.4.*;
+
+contract iplPlayers{
+    
+    struct players{
+        address uid;    //each players have different account        
+        string name;
+        string teamName;
+    }
+    mapping(address=>players) public player;
+    
+    modifier isAuth(address uid)
+    {
+        require(uid == msg.sender);
+        _;
+    }
+
+    function addPlayer(string _name,string _teamName) public
+    {
+        player[msg.sender] = players(msg.sender,_name,_teamName);
+    }
+    
+    // a player can view only his/her information
+    function getInfo(address _uid) view isAuth(_uid) public returns(string,string){
+        return (player[_uid].name,player[_uid].teamName);
+    }
+    
+     // a player can change only his/her team
+    function transfer(string _teamName) public{
+        player[msg.sender].teamName = _teamName;
+    }
+    
+}
